@@ -38,9 +38,6 @@ void setup() {
 void loop() {
   // Required variables
   float data[10][6]={0};
-
-
-  Serial.println("Ree"+ (String)loopIter );
   
   /* Get new sensor events with the readings */
   imuLog(data);
