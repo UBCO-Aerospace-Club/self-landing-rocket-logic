@@ -11,25 +11,32 @@
 #include <Wire.h>
 #include <SPI.h>
 #include <SD.h>
+#include <SoftwareSerial.h>
 
 //Global Constants
 Adafruit_MPU6050 mpu;
 const int chipSelect = 4;
+int ledPin = 13;
+int state = 0;
+int flag = 0;
 
 //setup
 void imuSetup();
 void sdSetup();
+void bluetoothSetup();
 
 //loop functions
 void imuLog(float [10][6]);
 void dataFormat(float [10][6], File);
 void sdLog(float [10][6]);
+void bluetoothLog();
 
 void setup() {
   Serial.begin(9600);
 
   imuSetup();
   sdSetup();
+  bluetoothSetup();
   
   delay(100);
 
@@ -42,6 +49,7 @@ void loop() {
   /* Get new sensor events with the readings */
   imuLog(data);
   sdLog(data);
+  bluetoothLog();
 
 }
 
@@ -65,6 +73,15 @@ void sdSetup(){
   if (!SD.begin(chipSelect)) {
     Serial.println("Card failed, or not present");
   }
+
+}
+
+void bluetoothSetup(){
+
+  pinMode(ledPin, OUTPUT);
+  digitalWrite(ledPin, LOW);
+  Serial.begin(9600);
+  SoftwareSerial Bluetooth(0, 1); // RX, TX
 
 }
 
@@ -115,4 +132,25 @@ void dataWriteToFile(float data[10][6], File dataFile){
     dataFile.print("\n");  
   }
 
+}
+
+void bluetoothLog(){
+  if (Serial.available()>0){
+    state = Serial.read();
+    flag = 0;
+  }
+
+  if (state == '0'){
+    digitalWrite(ledPin, LOW);
+  }
+  if(flag == 0){
+    Serial.println("LED: off");
+    flag = 1;
+  } else if(state == '1' ) {
+    digitalWrite(ledPin, HIGH);
+    if(flag == 0){
+      Serial.println("LED: on");
+      flag = 1;
+    }
+  }
 }
