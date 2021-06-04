@@ -6,30 +6,42 @@
 //------------------------------------------------------------------//
 
 //included libraries
-#include <Adafruit_MPU6050.h>
+#include <Adafruit_BNO055.h>
+#include <utility/imumaths.h>
 #include <Adafruit_Sensor.h>
 #include <Wire.h>
 #include <SPI.h>
 #include <SD.h>
+#include <SoftwareSerial.h>
+
+/* Set the delay between fresh samples */
+uint16_t BNO055_SAMPLERATE_DELAY_MS = 100;
 
 //Global Constants
-Adafruit_MPU6050 mpu;
-const int chipSelect = 4;
+Adafruit_BNO055 bno = Adafruit_BNO055(55, 0x28);
+int chipSelect = 10;
+int ledPin = 2;
+int flag = 0;
+char state = 1;
 
 //setup
 void imuSetup();
 void sdSetup();
+void bluetoothSetup();
 
 //loop functions
-void imuLog(float [10][6]);
-void dataFormat(float [10][6], File);
-void sdLog(float [10][6]);
+void imuLog(float [10][7][3]);
+void logEvent(sensors_event_t* event, float [3]);
+void dataFormat(float [10][7][3], File);
+void sdLog(float [10][7][3]);
+void bluetoothLog();
 
 void setup() {
   Serial.begin(9600);
 
   imuSetup();
   sdSetup();
+  bluetoothSetup();
   
   delay(100);
 
@@ -37,25 +49,25 @@ void setup() {
 
 void loop() {
   // Required variables
-  float data[10][6]={0};
+  float data[7][3]={0};
   
   /* Get new sensor events with the readings */
   imuLog(data);
   sdLog(data);
+  bluetoothLog();
 
 }
 
 void imuSetup(){
 
-  // Try to initialize!
-  if (!mpu.begin()) {
-    Serial.println("Failed to find MPU6050 chip");
+  if (!bno.begin())
+  {
+    /* There was a problem detecting the BNO055 ... check your connections */
+    Serial.print("Ooops, no BNO055 detected ... Check your wiring or I2C ADDR!");
+    while (1);
   }
 
-  //Some paramaters to set the capabilities of the IMU
-  mpu.setAccelerometerRange(MPU6050_RANGE_8_G);
-  mpu.setGyroRange(MPU6050_RANGE_500_DEG);
-  mpu.setFilterBandwidth(MPU6050_BAND_21_HZ);
+  delay(1000);
 
 }
 
@@ -68,25 +80,84 @@ void sdSetup(){
 
 }
 
-void imuLog(float data[10][6]){
-  // A function to take data from the IMU and log it to an array
+void bluetoothSetup(){
 
-    for(int timer=0;timer<10;timer++){
-      sensors_event_t a, g, temp;
-      mpu.getEvent(&a, &g, &temp);
-
-      data[timer][0]=a.acceleration.x;
-      data[timer][1]=a.acceleration.y;
-      data[timer][2]=a.acceleration.z;
-      data[timer][3]=g.gyro.x;
-      data[timer][4]=g.gyro.y;
-      data[timer][5]=g.gyro.z;
-      
-  }
+  pinMode(ledPin, OUTPUT);
+  digitalWrite(ledPin, LOW);
+  Serial.begin(9600);
+  SoftwareSerial Bluetooth(0, 1); // RX, TX
 
 }
 
-void sdLog( float data[10][6] ){
+void imuLog(float data[7][3]){
+  // A function to take data from the IMU and log it to an array
+
+  sensors_event_t orientationData , angVelocityData , linearAccelData, magnetometerData, accelerometerData, gravityData;
+      
+      // get data
+      bno.getEvent(&orientationData, Adafruit_BNO055::VECTOR_EULER);
+      bno.getEvent(&angVelocityData, Adafruit_BNO055::VECTOR_GYROSCOPE);
+      bno.getEvent(&linearAccelData, Adafruit_BNO055::VECTOR_LINEARACCEL);
+      bno.getEvent(&magnetometerData, Adafruit_BNO055::VECTOR_MAGNETOMETER);
+      bno.getEvent(&accelerometerData, Adafruit_BNO055::VECTOR_ACCELEROMETER);
+      bno.getEvent(&gravityData, Adafruit_BNO055::VECTOR_GRAVITY);
+     
+      
+      // save data
+      logEvent(&orientationData, data[0]);
+      logEvent(&angVelocityData, data[1]);
+      logEvent(&linearAccelData, data[2]);
+      logEvent(&magnetometerData, data[3]);
+      logEvent(&accelerometerData, data[4]);
+      logEvent(&gravityData, data[5]);
+
+}
+
+void logEvent(sensors_event_t* event, float localData[3]) {
+  double x = -1000000, y = -1000000 , z = -1000000; //dumb values, easy to spot problem
+  switch(event->type){
+    case SENSOR_TYPE_ACCELEROMETER:
+      localData[0] = event->acceleration.x;
+      localData[1] = event->acceleration.y;
+      localData[2] = event->acceleration.z;
+      break;
+
+    case SENSOR_TYPE_ORIENTATION:
+      localData[0] = event->orientation.x;
+      localData[1] = event->orientation.y;
+      localData[2] = event->orientation.z;
+      break;
+
+    case SENSOR_TYPE_MAGNETIC_FIELD:
+      localData[0] = event->magnetic.x;
+      localData[1] = event->magnetic.y;
+      localData[2] = event->magnetic.z;
+      break;
+
+    case SENSOR_TYPE_GYROSCOPE:
+      localData[0] = event->gyro.x;
+      localData[1] = event->gyro.y;
+      localData[2] = event->gyro.z;
+      break;
+
+    case SENSOR_TYPE_ROTATION_VECTOR:
+      localData[0] = event->gyro.x;
+      localData[1] = event->gyro.y;
+      localData[2] = event->gyro.z;
+      break;
+
+    case SENSOR_TYPE_LINEAR_ACCELERATION:
+      localData[0] = event->acceleration.x;
+      localData[1] = event->acceleration.y;
+      localData[2] = event->acceleration.z;
+      break;
+    default:
+      break;
+  }
+}
+
+
+void sdLog( float data[7][3] ){
   
   // open the file. note that only one file can be open at a time,
   // so you have to close this one before opening another.
@@ -104,15 +175,36 @@ void sdLog( float data[10][6] ){
 
 }
 
-void dataWriteToFile(float data[10][6], File dataFile){
+void dataWriteToFile(float data[7][3], File dataFile){
   //  A function to take accelleration data and write to a file in a csv format.
+      data[7][1] = millis();
+      data[7][2] = 0;
+      data[7][3] = 0;
 
-  for(int i=0;i<10;i++){
-    for(int j=0;j<6;j++){
-      String dataChar = (String)data[i][j];
-      dataFile.print( dataChar +",");
+    for(int j=0;j<7;j++){
+      for(int k=0;k<3;k++){
+        String dataChar = (String)data[j][k];
+        dataFile.print( dataChar +",");
+      }
     }
     dataFile.print("\n");  
-  }
 
+}
+
+void bluetoothLog(){
+ if (Serial.available()>0)
+{
+  state = Serial.read();
+}
+
+if (state == 'B')
+{
+  digitalWrite(ledPin, LOW);
+  Serial.println(state);
+}
+if(state == 'A')
+{  
+  digitalWrite(ledPin, HIGH);  
+  Serial.println(state);
+}
 }
