@@ -1,4 +1,5 @@
 #include "logging.h"
+
 #include "globals.h"
 
 void sdLog(float data[6][3]) {
@@ -17,10 +18,13 @@ void sdLog(float data[6][3]) {
   }
 }
 
-void dataWriteToFile(float data[6][3], File dataFile) {
+void dataWriteToFile(float data[7][3], File dataFile) {
   //  A function to take accelleration data and write to a file in a csv format.
+  data[7][1] = millis();
+  data[7][2] = 0;
+  data[7][3] = 0;
 
-  for (int j = 0; j < 6; j++) {
+  for (int j = 0; j < 7; j++) {
     for (int k = 0; k < 3; k++) {
       String dataChar = (String)data[j][k];
       dataFile.print(dataChar + ",");

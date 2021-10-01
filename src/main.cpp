@@ -39,7 +39,7 @@ void bluetoothSetup();
 
 void setup() {
   Serial.begin(9600);
-
+  Serial.println("Begin Setup...");
   imuSetup();
   sdSetup();
   // bluetoothSetup();
