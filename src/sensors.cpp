@@ -1,7 +1,7 @@
 #include "globals.h"
 #include "logging.h"
 
-void pollSensors(float data[6][3]) {
+void pollSensors(float (&data)[7][3]) {
   // A function to take data from the IMU and log it to an array
 
   sensors_event_t orientationData, angVelocityData, linearAccelData, magnetometerData,
@@ -15,7 +15,7 @@ void pollSensors(float data[6][3]) {
   bno.getEvent(&accelerometerData, Adafruit_BNO055::VECTOR_ACCELEROMETER);
   bno.getEvent(&gravityData, Adafruit_BNO055::VECTOR_GRAVITY);
 
-  // save data
+  // save data by passing array from matrix
   updateValues(&orientationData, data[0]);
   updateValues(&angVelocityData, data[1]);
   updateValues(&linearAccelData, data[2]);
@@ -24,6 +24,7 @@ void pollSensors(float data[6][3]) {
   updateValues(&gravityData, data[5]);
 }
 
+// Take data row and append values based on which event type it is
 void updateValues(sensors_event_t* event, float localData[3]) {
   switch (event->type) {
     case SENSOR_TYPE_ACCELEROMETER:

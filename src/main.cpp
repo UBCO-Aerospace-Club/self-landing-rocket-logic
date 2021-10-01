@@ -48,7 +48,7 @@ void setup() {
 
 void loop() {
   // Required variables
-  float data[6][3] = {0};
+  float data[7][3] = {0};
 
   /* Get new sensor events with the readings */
   pollSensors(data);
@@ -62,8 +62,9 @@ void imuSetup() {
   if (!bno.begin()) {
     /* There was a problem detecting the BNO055 ... check your connections */
     Serial.print("Ooops, no BNO055 detected ... Check your wiring or I2C ADDR!");
-    while (1)
-      ;
+    while (1) {
+      errorCode(0);
+    }
   }
 
   delay(1000);
@@ -73,6 +74,9 @@ void sdSetup() {
   // see if the card is present and can be initialized:
   if (!SD.begin(chipSelect)) {
     Serial.println("Card failed, or not present");
+    while (1) {
+      errorCode(1);
+    }
   }
 }
 
