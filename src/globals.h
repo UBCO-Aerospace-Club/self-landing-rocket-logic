@@ -1,6 +1,6 @@
 
-//use this file for global variables shared across multiple cpp files
-#pragma once 
+// use this file for global variables shared across multiple cpp files
+#pragma once
 #include <Adafruit_BNO055.h>
 extern Adafruit_BNO055 bno;
 extern int chipSelect;

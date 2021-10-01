@@ -1,6 +1,6 @@
 #pragma once
-#include <SD.h>
 #include <Adafruit_BNO055.h>
+#include <SD.h>
 
 void imuLog(float data[6][3]);
 void dataWriteToFile(float data[6][3], File dataFile);
