@@ -16,11 +16,14 @@
 
 #include "globals.h"
 #include "logging.h"
+#include "sensors.h"
 
 //////////// Global Var's & Constants ///////////////
 
 /* Set the delay between fresh samples */
 const uint16_t BNO055_SAMPLERATE_DELAY_MS = 100;
+
+Adafruit_BNO055 bno = Adafruit_BNO055(55, 0x28);
 
 int chipSelect = 10;
 int ledPin = 13;
@@ -33,15 +36,6 @@ int flag = 0;
 void imuSetup();
 void sdSetup();
 void bluetoothSetup();
-Adafruit_BNO055 bno = Adafruit_BNO055(55, 0x28);
-
-// loop functions
-void imuLog(float[6][3]);
-void logEvent(sensors_event_t* event, float[3]);
-void dataFormat(float[10][6][3], File);
-void dataWriteToFile(float data[6][3], File dataFile);
-void sdLog(float[6][3]);
-void bluetoothLog();
 
 void setup() {
   Serial.begin(9600);
@@ -49,7 +43,6 @@ void setup() {
   imuSetup();
   sdSetup();
   // bluetoothSetup();
-
   delay(100);
 }
 
@@ -58,10 +51,12 @@ void loop() {
   float data[6][3] = {0};
 
   /* Get new sensor events with the readings */
-  imuLog(data);
+  pollSensors(data);
   sdLog(data);
   // bluetoothLog();
 }
+
+///////////////////////////////// Setup Funcitons ///////////////////////////////////////
 
 void imuSetup() {
   if (!bno.begin()) {
