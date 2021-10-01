@@ -30,10 +30,11 @@ void sdSetup();
 void bluetoothSetup();
 
 //loop functions
-void imuLog(float [10][6][3]);
+void imuLog(float [6][3]);
 void logEvent(sensors_event_t* event, float [3]);
 void dataFormat(float [10][6][3], File);
-void sdLog(float [10][6][3]);
+void dataWriteToFile(float data[6][3], File dataFile);
+void sdLog(float [6][3]);
 void bluetoothLog();
 
 void setup() {
@@ -49,7 +50,7 @@ void setup() {
 
 void loop() {
   // Required variables
-  float data[6][3]={0};
+  float data[6][3] = {0};
   
   /* Get new sensor events with the readings */
   imuLog(data);
