@@ -9,10 +9,7 @@
 #include <Adafruit_BNO055.h>
 #include <Adafruit_Sensor.h>
 #include <SD.h>
-#include <SPI.h>
 #include <SoftwareSerial.h>
-#include <Wire.h>
-#include <utility/imumaths.h>
 
 #include "globals.h"
 #include "logging.h"
