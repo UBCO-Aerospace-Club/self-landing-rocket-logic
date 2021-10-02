@@ -20,10 +20,6 @@ void sdLog(float (&data)[7][3]) {
 
 void dataWriteToFile(float data[7][3], File dataFile) {
   //  A function to take accelleration data and write to a file in a csv format.
-  data[6][0] = millis();
-  data[6][1] = 0;
-  data[6][2] = 0;
-
   for (int j = 0; j < 7; j++) {
     for (int k = 0; k < 3; k++) {
       String dataChar = (String)data[j][k];
