@@ -1,5 +1,7 @@
 #include "logging.h"
 
+#include <ArduinoLogger.h>
+
 #include "globals.h"
 
 void sdLog(float (&data)[7][3]) {
@@ -14,7 +16,7 @@ void sdLog(float (&data)[7][3]) {
   }
   // if the file isn't open, pop up an error:
   else {
-    Serial.println("error opening datalog.txt");
+    err << "error opening datalog.txt";
   }
 }
 
@@ -38,16 +40,18 @@ void bluetoothLog() {
     digitalWrite(ledPin, LOW);
   }
   if (flag == 0) {
-    Serial.println("LED: off");
+    inf << "LED: off";
     flag = 1;
   } else if (state == '1') {
     digitalWrite(ledPin, HIGH);
     if (flag == 0) {
-      Serial.println("LED: on");
+      inf << "LED: on";
       flag = 1;
     }
   }
 }
+
+// Display error code (0 IMU error, 1 SD Connection Error, 2 Bluetooth Conection Error)
 void errorCode(int error) {
   switch (error) {
     case 0:  // IMU conection error (slow led blink)
