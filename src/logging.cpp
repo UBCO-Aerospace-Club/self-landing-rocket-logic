@@ -4,6 +4,24 @@
 
 #include "globals.h"
 
+void logSetup() {}
+
+void logJson() {
+  Serial.print("/*");
+  Serial.print(data[0][0]);
+  Serial.print(",");
+  Serial.print(data[0][1]);
+  Serial.print(",");
+  Serial.print(data[0][2]);
+  Serial.print(",");
+  Serial.print(data[4][0]);
+  Serial.print(",");
+  Serial.print(data[4][1]);
+  Serial.print(",");
+  Serial.print(data[4][2]);
+  Serial.print("*/\n");
+}
+
 void sdLog(float (&data)[7][3]) {
   // open the file. note that only one file can be open at a time,
   // so you have to close this one before opening another.

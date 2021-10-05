@@ -29,51 +29,56 @@ void pollSensors() {
 
 // Take data row and append values based on which event type it is
 void updateValues(sensors_event_t* event, float (&data)[3]) {
+  logJson();
   switch (event->type) {
     case SENSOR_TYPE_ACCELEROMETER:
-      Serial.print("Accl:");
+      // Serial.print("Accl:");
       data[0] = event->acceleration.x;
       data[1] = event->acceleration.y;
       data[2] = event->acceleration.z;
       break;
 
     case SENSOR_TYPE_ORIENTATION:
-      Serial.print("Orient:");
+      // Serial.print("Orient:");
       data[0] = event->orientation.x;
       data[1] = event->orientation.y;
       data[2] = event->orientation.z;
       break;
 
     case SENSOR_TYPE_MAGNETIC_FIELD:
-      Serial.print("Mag:");
+      // Serial.print("Mag:");
       data[0] = event->magnetic.x;
       data[1] = event->magnetic.y;
       data[2] = event->magnetic.z;
+
       break;
 
     case SENSOR_TYPE_GYROSCOPE:
-      Serial.print("Gyro:");
+      // Serial.print("Gyro:");
       data[0] = event->gyro.x;
       data[1] = event->gyro.y;
       data[2] = event->gyro.z;
+
       break;
 
     case SENSOR_TYPE_ROTATION_VECTOR:
-      Serial.print("Rot:");
+      // Serial.print("Rot:");
       data[0] = event->gyro.x;
       data[1] = event->gyro.y;
       data[2] = event->gyro.z;
+
       break;
 
     case SENSOR_TYPE_LINEAR_ACCELERATION:
-      Serial.print("Linear:");
+      // Serial.print("Linear:");
       data[0] = event->acceleration.x;
       data[1] = event->acceleration.y;
       data[2] = event->acceleration.z;
+
       break;
 
     default:
-      Serial.print("Unk:");
+      // Serial.print("Unk:");
       break;
   }
 }

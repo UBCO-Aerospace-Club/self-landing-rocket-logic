@@ -40,7 +40,8 @@ void setup() {
   Serial.begin(9600);
   logger.add(Serial, LOG_LEVEL_VERBOSE);  // This will log everything on Serial
   inf << np << endl;  // Displays an end of line without the prefix (Because of "np")
-  verb << "Begin Setup...";
+  verb << "Begin Setup...\n";
+  logSetup();
   imuSetup();
   sdSetup();
   // bluetoothSetup();
@@ -59,7 +60,7 @@ void loop() {
 void imuSetup() {
   if (!bno.begin()) {
     /* There was a problem detecting the BNO055 ... check your connections */
-    err << "Ooops, no BNO055 detected ... Check your wiring or I2C ADDR!";
+    err << "Ooops, no BNO055 detected ... Check your wiring or I2C ADDR!\n";
     while (1) {
       errorCode(0);
     }
@@ -71,7 +72,7 @@ void imuSetup() {
 void sdSetup() {
   // see if the card is present and can be initialized:
   if (!SD.begin(chipSelect)) {
-    err << "Card failed, or not present";
+    err << "Card failed, or not present\n";
     while (1) {
       errorCode(1);
     }
