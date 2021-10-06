@@ -42,6 +42,7 @@ void setup() {
   inf << np << endl;  // Displays an end of line without the prefix (Because of "np")
   verb << "Begin Setup...\n";
   logSetup();
+  sensorsSetup();
   imuSetup();
   sdSetup();
   // bluetoothSetup();

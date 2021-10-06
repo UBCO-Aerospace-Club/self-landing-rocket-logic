@@ -1,13 +1,25 @@
 #include "sensors.h"
+#define TINY_BME280_SPI
+#include <TinyBME280.h>
 
 #include "globals.h"
 #include "logging.h"
+
+tiny::BME280 sensor;
+
+void sensorsSetup() {
+  sensor.begin();
+}
 
 void pollSensors() {
   // A function to take data from the IMU and log it to an array
 
   sensors_event_t orientationData, angVelocityData, linearAccelData, magnetometerData,
       accelerometerData, gravityData;
+
+  float temp = sensor.readFixedTempC();
+  float hum = sensor.readFixedHumidity();
+  float pres = sensor.readFixedPressure();
 
   // get data
   bno.getEvent(&orientationData, Adafruit_BNO055::VECTOR_EULER);
