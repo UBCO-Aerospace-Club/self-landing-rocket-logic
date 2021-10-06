@@ -8,11 +8,9 @@
 // included libraries
 #include <Adafruit_BNO055.h>
 #include <Adafruit_Sensor.h>
+#include <ArduinoLogger.h>
 #include <SD.h>
-#include <SPI.h>
 #include <SoftwareSerial.h>
-#include <Wire.h>
-#include <utility/imumaths.h>
 
 #include "globals.h"
 #include "logging.h"
@@ -25,10 +23,11 @@ const uint16_t BNO055_SAMPLERATE_DELAY_MS = 100;
 
 Adafruit_BNO055 bno = Adafruit_BNO055(55, 0x28);
 
-int chipSelect = 10;
-int ledPin = 13;
-int state = 0;
-int flag = 0;
+unsigned short chipSelect = 10;
+unsigned short ledPin = 13;
+unsigned short state = 0;
+unsigned short flag = 0;
+float data[7][3] = {0};
 
 /////////////////////////////////////////////////////
 
@@ -39,7 +38,11 @@ void bluetoothSetup();
 
 void setup() {
   Serial.begin(9600);
-  Serial.println("Begin Setup...");
+  logger.add(Serial, LOG_LEVEL_VERBOSE);  // This will log everything on Serial
+  inf << np << endl;  // Displays an end of line without the prefix (Because of "np")
+  verb << "Begin Setup...\n";
+  logSetup();
+  sensorsSetup();
   imuSetup();
   sdSetup();
   // bluetoothSetup();
@@ -47,11 +50,8 @@ void setup() {
 }
 
 void loop() {
-  // Required variables
-  float data[6][3] = {0};
-
   /* Get new sensor events with the readings */
-  pollSensors(data);
+  pollSensors();
   sdLog(data);
   // bluetoothLog();
 }
@@ -61,9 +61,10 @@ void loop() {
 void imuSetup() {
   if (!bno.begin()) {
     /* There was a problem detecting the BNO055 ... check your connections */
-    Serial.print("Ooops, no BNO055 detected ... Check your wiring or I2C ADDR!");
-    while (1)
-      ;
+    err << "Ooops, no BNO055 detected ... Check your wiring or I2C ADDR!\n";
+    while (1) {
+      errorCode(0);
+    }
   }
 
   delay(1000);
@@ -72,7 +73,10 @@ void imuSetup() {
 void sdSetup() {
   // see if the card is present and can be initialized:
   if (!SD.begin(chipSelect)) {
-    Serial.println("Card failed, or not present");
+    err << "Card failed, or not present\n";
+    while (1) {
+      errorCode(1);
+    }
   }
 }
 
