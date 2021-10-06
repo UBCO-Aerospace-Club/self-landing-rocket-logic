@@ -18,3 +18,16 @@ Connect hardware via serial
 
 Press upload button 
 
+## Logging
+
+You can set the log level in the code, options are 
+
+* LOG_LEVEL_SILENT  
+* LOG_LEVEL_ERROR   
+* LOG_LEVEL_WARNING 
+* LOG_LEVEL_INFO    
+* LOG_LEVEL_TRACE   
+* LOG_LEVEL_VERBOSE 
+
+It is possible to visualize data from the Sensors by using a program such as [Serial Studio](https://github.com/Serial-Studio/Serial-Studio)
+
