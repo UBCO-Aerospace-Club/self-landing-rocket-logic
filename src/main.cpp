@@ -23,10 +23,10 @@ const uint16_t BNO055_SAMPLERATE_DELAY_MS = 100;
 
 Adafruit_BNO055 bno = Adafruit_BNO055(55, 0x28);
 
-int chipSelect = 10;
-int ledPin = 13;
-int state = 0;
-int flag = 0;
+unsigned short chipSelect = 10;
+unsigned short ledPin = 13;
+unsigned short state = 0;
+unsigned short flag = 0;
 float data[7][3] = {0};
 
 /////////////////////////////////////////////////////

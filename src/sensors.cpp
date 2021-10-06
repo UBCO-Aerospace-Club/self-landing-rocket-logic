@@ -1,14 +1,14 @@
 #include "sensors.h"
-#define TINY_BME280_SPI
-#include <TinyBME280.h>
+//#define TINY_BME280_SPI
+//#include <TinyBME280.h>
 
 #include "globals.h"
 #include "logging.h"
 
-tiny::BME280 sensor;
+// tiny::BME280 barometer;
 
 void sensorsSetup() {
-  sensor.begin();
+  //  barometer.begin();
 }
 
 void pollSensors() {
@@ -17,9 +17,9 @@ void pollSensors() {
   sensors_event_t orientationData, angVelocityData, linearAccelData, magnetometerData,
       accelerometerData, gravityData;
 
-  float temp = sensor.readFixedTempC();
-  float hum = sensor.readFixedHumidity();
-  float pres = sensor.readFixedPressure();
+  //  float temp = barometer.readFixedTempC();
+  //  float hum = barometer.readFixedHumidity();
+  //  float pres = barometer.readFixedPressure();
 
   // get data
   bno.getEvent(&orientationData, Adafruit_BNO055::VECTOR_EULER);

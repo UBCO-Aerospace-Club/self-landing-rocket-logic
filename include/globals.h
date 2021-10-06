@@ -6,8 +6,8 @@
 #include "sensors.h"
 
 extern Adafruit_BNO055 bno;
-extern int chipSelect;
-extern int ledPin;
-extern int state;
-extern int flag;
+extern unsigned short chipSelect;
+extern unsigned short ledPin;
+extern unsigned short state;
+extern unsigned short flag;
 extern float data[7][3];
