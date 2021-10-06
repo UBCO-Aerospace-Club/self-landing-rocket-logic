@@ -31,3 +31,10 @@ You can set the log level in the code, options are
 
 It is possible to visualize data from the Sensors by using a program such as [Serial Studio](https://github.com/Serial-Studio/Serial-Studio)
 
+## Library's Used
+
+*	adafruit/Adafruit BNO055@^1.5.1
+*	Wire
+*	adafruit/SD@0.0.0-alpha+sha.041f788250
+*	farossco/ArduinoLogger@^1.2.4
+*	fabyte/Tiny BME280@^1.0.2
