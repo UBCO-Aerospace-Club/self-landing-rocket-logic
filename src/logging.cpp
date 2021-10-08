@@ -16,36 +16,42 @@ void logToSerial() {
   Serial.print(data[0][1]);
   Serial.print(",");
   Serial.print(data[0][2]);
+  //////////////////////
   Serial.print(",");  // ang Velocity
   Serial.print(data[1][0]);
   Serial.print(",");
   Serial.print(data[1][1]);
   Serial.print(",");
   Serial.print(data[1][2]);
+  //////////////////////
   Serial.print(",");  // Linear acceleration
   Serial.print(data[2][0]);
   Serial.print(",");
   Serial.print(data[2][1]);
   Serial.print(",");
   Serial.print(data[2][2]);
+  //////////////////////
   Serial.print(",");  // magnetometer
   Serial.print(data[3][0]);
   Serial.print(",");
   Serial.print(data[3][1]);
   Serial.print(",");
   Serial.print(data[3][2]);
+  //////////////////////
   Serial.print(",");  // accelerometer
   Serial.print(data[4][0]);
   Serial.print(",");
   Serial.print(data[4][1]);
   Serial.print(",");
   Serial.print(data[4][2]);
+  //////////////////////
   Serial.print(",");  // gravity
   Serial.print(data[5][0]);
   Serial.print(",");
   Serial.print(data[5][1]);
   Serial.print(",");
   Serial.print(data[5][2]);
+  //////////////////////
   Serial.print(",");  // time
   Serial.print(data[6][0]);
   Serial.print("*/\n");
@@ -84,6 +90,7 @@ void dataWriteToFile(float data[7][3], File dataFile) {
 }
 
 void bluetoothLog() {
+#ifdef LOGBT
   if (Serial.available() > 0) {
     state = Serial.read();
     flag = 0;
@@ -101,6 +108,7 @@ void bluetoothLog() {
       flag = 1;
     }
   }
+#endif
 }
 
 // Display error code (0 IMU error, 1 SD Connection Error, 2 Bluetooth Conection Error)
