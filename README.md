@@ -1,7 +1,7 @@
 # self-landing-rocket-logic
 Code for the self landing rocket in the UBCO Aerospace Club.
 
-## Tech Stack
+## Hardware
 **Processor** - Atmel 328P @ 16MHz
 
 **IMU** - BNO055
