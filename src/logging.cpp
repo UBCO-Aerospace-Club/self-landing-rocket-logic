@@ -53,6 +53,7 @@ void logToSerial() {
 }
 
 void sdLog(float (&data)[7][3]) {
+#ifdef LOGSD
   // open the file. note that only one file can be open at a time,
   // so you have to close this one before opening another.
   File dataFile = SD.open("datalog.txt", FILE_WRITE);
@@ -66,9 +67,11 @@ void sdLog(float (&data)[7][3]) {
   else {
     err << "error opening datalog.txt";
   }
+#endif
 }
 
 void dataWriteToFile(float data[7][3], File dataFile) {
+#ifdef LOGSD
   //  A function to take accelleration data and write to a file in a csv format.
   for (int j = 0; j < 7; j++) {
     for (int k = 0; k < 3; k++) {
@@ -77,6 +80,7 @@ void dataWriteToFile(float data[7][3], File dataFile) {
     }
   }
   dataFile.print("\n");
+#endif
 }
 
 void bluetoothLog() {
