@@ -1,5 +1,6 @@
 # self-landing-rocket-logic
 Code for the self landing rocket in the UBCO Aerospace Club.
+[Andre's repo](https://github.com/AndreCox/self-landing-rocket-logic) is usually more up to data
 
 ## Hardware
 **Processor** - Atmel 328P @ 16MHz
