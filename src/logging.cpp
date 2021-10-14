@@ -1,9 +1,18 @@
 #include "logging.h"
 
 #include <ArduinoLogger.h>
+//#include <SPI.h>
+#include <SD.h>
 
 #include "../configuration.h"
+//#include "SdFat.h"
 #include "globals.h"
+//#include "sdios.h"
+
+#ifdef LOGSD
+// SdFat sd;
+// SdFile file;
+#endif
 
 void logSetup() {}
 
