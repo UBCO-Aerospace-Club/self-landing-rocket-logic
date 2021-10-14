@@ -31,7 +31,7 @@ You can set the log level in the code, options are
 * LOG_LEVEL_TRACE   
 * LOG_LEVEL_VERBOSE 
 
-It is possible to visualize data from the Sensors by using a program such as [Serial Studio](https://github.com/Serial-Studio/Serial-Studio)
+It's possible to visualize data from the Sensors by using a program such as [Serial Studio](https://github.com/Serial-Studio/Serial-Studio)
 
 ## Library's Used
 
