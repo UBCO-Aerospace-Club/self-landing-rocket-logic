@@ -4,7 +4,6 @@
 
 #include "globals.h"
 #include "logging.h"
-
 // tiny::BME280 barometer;
 
 void sensorsSetup() {
@@ -41,7 +40,7 @@ void pollSensors() {
 
 // Take data row and append values based on which event type it is
 void updateValues(sensors_event_t* event, float (&data)[3]) {
-  logJson();
+  logToSerial();
   switch (event->type) {
     case SENSOR_TYPE_ACCELEROMETER:
       // Serial.print("Accl:");
